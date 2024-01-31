@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { AddClientDto } from "./dto/addClientDto";
 import { UpdateClientDto } from "./dto/updateClientDto";
 import { InjectModel } from "@nestjs/sequelize";
@@ -21,6 +21,9 @@ export class ClientService{
     }
 
     async updateClient(clientID: string , updateClientDto: UpdateClientDto): Promise<Client>{
+        if(Object.keys(updateClientDto).length === 0){
+            return await this.getClient(clientID);
+        }
         return (await this.clientModel.update(updateClientDto , {where: {id:clientID}, returning:true}))[1][0];
     }
 

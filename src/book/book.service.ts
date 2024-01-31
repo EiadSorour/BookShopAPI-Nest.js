@@ -21,6 +21,9 @@ export class BookService{
     }
 
     async updateBook(bookID:string , updateBookDto:UpdateBookDto): Promise<Book>{
+        if(Object.keys(updateBookDto).length === 0){
+            return await this.getBook(bookID);
+        }
         return (await this.bookModel.update(updateBookDto , {where:{id:bookID}, returning:true }))[1][0];
     }
 

@@ -1,6 +1,20 @@
+import { IsString, IsNumber, IsOptional } from "class-validator";
+
 export class UpdateClientDto{
-    first_name?: string;
-    last_name?: string;
-    money_owned?: number;
-    total_books_bought?: number
+    
+    @IsString()
+    @IsOptional()
+    first_name: string;
+    
+    @IsString()
+    @IsOptional()
+    last_name: string;
+
+    @IsNumber()
+    @IsOptional()
+    money_owned: number;
+    
+    @IsNumber()
+    @IsOptional()
+    total_books_bought: number
 }

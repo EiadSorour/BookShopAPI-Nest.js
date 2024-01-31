@@ -18,20 +18,20 @@ export class OrderService{
     
     async buyBook(quantity:number , orderDto:OrderDto): Promise<string>{
 
-        const client:Client = await this.clientService.getClient(orderDto.clientID);
-        const book:Book = await this.bookService.getBook(orderDto.bookID);
+        const client:Client = await this.clientService.getClient(String(orderDto.clientID));
+        const book:Book = await this.bookService.getBook(String(orderDto.bookID));
 
         client.money_owned -= book.price*quantity;
         book.quantity_in_stock -= quantity;
         client.total_books_bought = Number(client.total_books_bought) +quantity;
 
         const order:OrderDto = new OrderDto();
-        order.quantity = quantity,
-        order.clientID = client.id,
-        order.bookID = book.id
+        order.quantity = quantity;
+        order.clientID = client.id;
+        order.bookID = book.id;
 
         await this.orderModel.create(order as any);
-
+        
         await this.clientService.updateClient(client.dataValues.id , client.dataValues);
         await this.bookService.updateBook(book.dataValues.id , book.dataValues);
 

@@ -1,5 +1,14 @@
+import { IsNumber, IsOptional } from "class-validator";
+
 export class OrderDto{
-    quantity?: number; 
-    clientID: string;
-    bookID: string;
+    
+    @IsOptional()
+    @IsNumber()
+    quantity: number; 
+    
+    @IsNumber()
+    clientID: number;
+    
+    @IsNumber()
+    bookID: number;
 }
