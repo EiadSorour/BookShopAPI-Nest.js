@@ -48,7 +48,7 @@ export class OrderService{
             await this.userService.updateUser(user.dataValues.id , user.dataValues);
             await this.bookService.updateBook(book.dataValues.id , book.dataValues);
 
-            return `User '${user.first_name} ${user.last_name}' bought ${quantity} copies of book '${book.title}' `;
+            return `User '${user.username}' bought ${quantity} copies of book '${book.title}' `;
         }catch(error){
             console.log("i am here");
             throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE); 

@@ -5,11 +5,11 @@ import { Order } from "src/order/order.model";
 @Table
 export class User extends Model{
     
-    @Column({allowNull: false})
-    first_name: string;
+    @Column({allowNull: false , unique:true})
+    username: string;
 
     @Column({allowNull: false})
-    last_name: string;
+    password: string;
 
     @Column({allowNull: false})
     money_owned: number;
