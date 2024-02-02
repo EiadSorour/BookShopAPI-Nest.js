@@ -1,7 +1,6 @@
-import { IsString, IsNumber, IsOptional } from "class-validator";
+import { IsString, IsNumber, IsOptional , IsEnum} from "class-validator";
 
-export class UpdateClientDto{
-    
+export class UpdateUserDto{
     @IsString()
     @IsOptional()
     first_name: string;
@@ -17,4 +16,9 @@ export class UpdateClientDto{
     @IsNumber()
     @IsOptional()
     total_books_bought: number
+
+    @IsString()
+    @IsOptional()
+    @IsEnum({client:"client" , admin:"admin"})
+    role: string
 }

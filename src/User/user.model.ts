@@ -3,7 +3,7 @@ import { Book } from "src/book/book.model";
 import { Order } from "src/order/order.model";
 
 @Table
-export class Client extends Model{
+export class User extends Model{
     
     @Column({allowNull: false})
     first_name: string;
@@ -14,6 +14,9 @@ export class Client extends Model{
     @Column({allowNull: false})
     money_owned: number;
 
+    @Column({allowNull: false})
+    role: string
+    
     @Column({defaultValue: 0})
     total_books_bought: number
 

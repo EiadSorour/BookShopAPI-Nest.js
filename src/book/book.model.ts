@@ -1,5 +1,5 @@
 import { Table , Column , Model, BelongsToMany } from "sequelize-typescript";
-import { Client } from "src/client/client.model";
+import { User } from "src/User/user.model";
 import { Order } from "src/order/order.model";
 
 @Table
@@ -14,6 +14,6 @@ export class Book extends Model{
     @Column({allowNull: false})
     quantity_in_stock: number;
 
-    @BelongsToMany(()=>Client , { through: {model: ()=>Order,  unique: false } })
-    clients: Client[]
+    @BelongsToMany(()=>User , { through: {model: ()=>Order,  unique: false } })
+    users: User[]
 }

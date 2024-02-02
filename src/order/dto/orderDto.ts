@@ -7,7 +7,7 @@ export class OrderDto{
     quantity: number; 
     
     @IsNumber()
-    clientID: number;
+    userID: number;
     
     @IsNumber()
     bookID: number;

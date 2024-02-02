@@ -11,6 +11,6 @@ export class UpdateBookDto{
     price?: number;
     
     @IsNumber()
-    @IsOptional()
+    @IsOptional() 
     quantity_in_stock?: number;
 }

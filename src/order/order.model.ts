@@ -1,6 +1,6 @@
 import { Table , Column , Model, ForeignKey } from "sequelize-typescript";
-import { Book } from "src/book/book.model";
-import { Client } from "src/client/client.model";
+import { Book } from "../book/book.model";
+import { User } from "../User/user.model";
 
 @Table
 export class Order extends Model{
@@ -15,8 +15,8 @@ export class Order extends Model{
     @Column
     bookID: number;
 
-    @ForeignKey(()=>Client) 
+    @ForeignKey(()=>User) 
     @Column
-    clientID: number;
+    userID: number;
 } 
 

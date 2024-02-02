@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { ClientModule } from './client/client.module';
+import { UserModule } from './User/user.module';
 import { BookModule } from './book/book.module';
 import { OrderModule } from './order/order.module';
 import { ConfigModule } from '@nestjs/config';
@@ -18,7 +18,7 @@ import { ConfigModule } from '@nestjs/config';
       autoLoadModels: true,
       synchronize: true   
     }),
-    ClientModule,
+    UserModule,
     BookModule,
     OrderModule
   ],

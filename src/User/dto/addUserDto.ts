@@ -1,6 +1,6 @@
 import { IsString, IsNumber } from "class-validator";
 
-export class AddClientDto{
+export class AddUserDto{
     @IsString()
     first_name: string;
 
@@ -9,4 +9,7 @@ export class AddClientDto{
     
     @IsNumber()
     money_owned: number
+
+    @IsString()
+    role: string
 }
