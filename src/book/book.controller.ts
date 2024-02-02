@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from "@nestjs/common";
 import { BookService } from "./book.service";
 import { Book } from "./book.model";
-import { Response } from "express";
 import { AddBookDto } from "./dto/addBookDto";
 import { UpdateBookDto } from "./dto/updateBookDto";
+import { HttpStatusMessage } from "../utils/HttpStatusMessage";
+import { AppError } from "../utils/AppError";
 
 @Controller("/api/book")
 export class BookController{
@@ -12,36 +13,45 @@ export class BookController{
 
     @Get()
     @HttpCode(200)
-    async getAllBooks(@Res() res:Response){
+    async getAllBooks(){
         const books:Book[] = await this.bookService.getAllBooks();
-        return res.json({status:HttpStatus.OK , data:{books}});
+        return {status:HttpStatusMessage.SUCCESS , data:{books}};
     }
 
     @Post()
     @HttpCode(201)
-    async addBook(@Body() addBookDto:AddBookDto , @Res() res:Response){
+    async addBook(@Body() addBookDto:AddBookDto){
         await this.bookService.addBook(addBookDto);
-        return res.json({status:HttpStatus.CREATED , data:{message:"Created Successfully"}});
+        return {status:HttpStatusMessage.SUCCESS , data:{message:"Created Successfully"}};
     }
 
     @Get("/:id")
     @HttpCode(200)
-    async getBook(@Param("id") id:string , @Res() res:Response){
+    async getBook(@Param("id") id:string){
         const book:Book = await this.bookService.getBook(id);
-        return res.json({status:HttpStatus.OK , data:{book}});
+        if(!book){
+            AppError("This book doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
+        }
+        return {status:HttpStatusMessage.SUCCESS , data:{book}};
     }
 
     @Patch("/:id")
     @HttpCode(200)
-    async updateBook(@Param("id") id:string , @Body() updateBookDto:UpdateBookDto, @Res() res:Response){
+    async updateBook(@Param("id") id:string , @Body() updateBookDto:UpdateBookDto){
         const updatedBook:Book = await this.bookService.updateBook(id,updateBookDto);
-        return res.json({status:HttpStatus.OK , data:{book:updatedBook}});
+        if(!updatedBook){
+            AppError("This book doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
+        }
+        return {status:HttpStatusMessage.SUCCESS , data:{book:updatedBook}};
     }
 
     @Delete("/:id")
     @HttpCode(200)
-    async deleteBook(@Param("id") id:string, @Res() res:Response){
-        await this.bookService.deleteBook(id);
-        return res.json({status:HttpStatus.OK , data:{message:"Deleted Successfully"}});
+    async deleteBook(@Param("id") id:string){
+        const deletedBooks = await this.bookService.deleteBook(id);
+        if(deletedBooks === 0){
+            AppError("This book doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
+        }
+        return {status:HttpStatusMessage.SUCCESS , data:{message:"Deleted Successfully"}};
     }
 }

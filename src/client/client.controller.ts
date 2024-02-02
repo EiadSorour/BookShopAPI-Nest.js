@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Next, Param, Patch, Post, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from "@nestjs/common";
 import { ClientService } from "./client.service";
 import { AddClientDto } from "./dto/addClientDto";
 import { UpdateClientDto } from "./dto/updateClientDto";
-import { NextFunction, Response } from "express";
 import { Client } from "./client.model";
+import { HttpStatusMessage } from "../utils/HttpStatusMessage";
+import { AppError } from "../utils/AppError";
 
 @Controller("api/client")
 export class ClientController{
@@ -12,37 +13,46 @@ export class ClientController{
 
     @Get() 
     @HttpCode(200)
-    async getAllClients(@Res() res:Response){
+    async getAllClients(){
         const clients:Client[] = await this.clientService.findAllClients();
-        return res.json({status: HttpStatus.OK , data:{clients}});
+        return {status: HttpStatusMessage.SUCCESS , data:{clients}};
     }
 
     @Post()
     @HttpCode(201)
-    async addClient(@Body() addClientDto:AddClientDto, @Res() res:Response){
+    async addClient(@Body() addClientDto:AddClientDto){
         await this.clientService.addClient(addClientDto);
-        return res.json({status: HttpStatus.CREATED , data:{message:"Created Successfully"}});
+        return {status: HttpStatusMessage.SUCCESS , data:{message:"Created Successfully"}};
     }
 
     @Get("/:id")
     @HttpCode(200)
-    async getClient( @Param("id") id:string , @Res() res:Response, @Next() next:NextFunction ){
+    async getClient( @Param("id") id:string){
         const client:Client = await this.clientService.getClient(id);
-        return res.json({status: HttpStatus.OK , data:{client}});
+        if(!client){
+            return AppError("This client doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
+        }
+        return {status: HttpStatusMessage.SUCCESS , data:{client}};
     }
 
     @Patch("/:id")
     @HttpCode(200)
-    async updateClient(@Param("id") id:string , @Body() updateClientDto:UpdateClientDto, @Res() res:Response){
+    async updateClient(@Param("id") id:string , @Body() updateClientDto:UpdateClientDto){
         const updatedClient:Client = await this.clientService.updateClient(id , updateClientDto);
-        return res.json({status: HttpStatus.OK , data:{updatedClient}});
+        if(!updatedClient){
+            return AppError("This client doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
+        }
+        return {status: HttpStatusMessage.SUCCESS , data:{updatedClient}};
     }
 
     @Delete("/:id")
     @HttpCode(200)
-    async deleteClient(@Param("id") id:string , @Res() res:Response){
-        await this.clientService.deleteClient(id);
-        return res.json({status: HttpStatus.CREATED , data:{message:"Deleted Successfully"}});
+    async deleteClient(@Param("id") id:string){
+        const deletedClients:number = await this.clientService.deleteClient(id);
+        if(deletedClients === 0){
+            return AppError("This client doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
+        }
+        return {status: HttpStatusMessage.SUCCESS , data:{message:"Deleted Successfully"}};
     }
 
 }

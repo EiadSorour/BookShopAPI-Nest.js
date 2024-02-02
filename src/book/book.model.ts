@@ -14,6 +14,6 @@ export class Book extends Model{
     @Column({allowNull: false})
     quantity_in_stock: number;
 
-    @BelongsToMany(()=>Client , ()=>Order)
+    @BelongsToMany(()=>Client , { through: {model: ()=>Order,  unique: false } })
     clients: Client[]
 }

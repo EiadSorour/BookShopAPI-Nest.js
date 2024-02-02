@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Book } from "./book.model";
 import { AddBookDto } from "./dto/addBookDto";
@@ -9,25 +9,45 @@ export class BookService{
     constructor(@InjectModel(Book) private bookModel: typeof Book){}
 
     async getAllBooks(): Promise<Book[]>{
-        return await this.bookModel.findAll();
+        try{
+            return await this.bookModel.findAll();
+        }catch(error){
+            throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     async getBook(bookID:string): Promise<Book>{
-        return await this.bookModel.findOne({where: {id:bookID}});
+        try{
+            return await this.bookModel.findOne({where: {id:bookID}});
+        }catch(error){
+            throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     async addBook(addBookDto: AddBookDto): Promise<void>{
-        await this.bookModel.create(addBookDto as any);
+        try{
+            await this.bookModel.create(addBookDto as any);
+        }catch(error){
+            throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     async updateBook(bookID:string , updateBookDto:UpdateBookDto): Promise<Book>{
-        if(Object.keys(updateBookDto).length === 0){
-            return await this.getBook(bookID);
+        try{
+            if(Object.keys(updateBookDto).length === 0){
+                return await this.getBook(bookID);
+            }
+            return (await this.bookModel.update(updateBookDto , {where:{id:bookID}, returning:true }))[1][0];
+        }catch(error){
+            throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE);
         }
-        return (await this.bookModel.update(updateBookDto , {where:{id:bookID}, returning:true }))[1][0];
     }
 
-    async deleteBook(bookID:string): Promise<void>{
-        await this.bookModel.destroy({where:{id:bookID}});
+    async deleteBook(bookID:string): Promise<number>{
+        try{
+            return await this.bookModel.destroy({where:{id:bookID}});
+        }catch(error){
+            throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 }

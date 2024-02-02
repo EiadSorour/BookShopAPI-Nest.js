@@ -9,25 +9,45 @@ export class ClientService{
     constructor(@InjectModel(Client) private clientModel: typeof Client){}
     
     async findAllClients(): Promise<Client[]>{
-        return await this.clientModel.findAll();
+        try{
+            return await this.clientModel.findAll();
+        }catch(error){
+            throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     async getClient(clientID:string): Promise<Client>{
-        return await this.clientModel.findOne({where: {id:clientID}});
+        try{
+            return await this.clientModel.findOne({where: {id:clientID}});
+        }catch(error){
+            throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE); 
+        }
     }
 
     async addClient(addClientDto: AddClientDto): Promise<void>{
-        await this.clientModel.create(addClientDto as any);
+        try{
+            await this.clientModel.create(addClientDto as any);
+        }catch(error){
+            throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE); 
+        }
     }
 
     async updateClient(clientID: string , updateClientDto: UpdateClientDto): Promise<Client>{
-        if(Object.keys(updateClientDto).length === 0){
-            return await this.getClient(clientID);
+        try{
+            if(Object.keys(updateClientDto).length === 0){
+                return await this.getClient(clientID);
+            }
+            return (await this.clientModel.update(updateClientDto , {where: {id:clientID}, returning:true}))[1][0];
+        }catch(error){
+            throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE); 
         }
-        return (await this.clientModel.update(updateClientDto , {where: {id:clientID}, returning:true}))[1][0];
     }
 
-    async deleteClient(clientID:string): Promise<void>{
-        await this.clientModel.destroy({where: {id:clientID}});
+    async deleteClient(clientID:string): Promise<number>{
+        try{
+            return await this.clientModel.destroy({where: {id:clientID}});
+        }catch(error){
+            throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE); 
+        }
     }
 }

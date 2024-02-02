@@ -16,7 +16,7 @@ import { ConfigModule } from '@nestjs/config';
       password: process.env.PASSWORD as any,
       database: process.env.DATABASE as any,
       autoLoadModels: true,
-      synchronize: true 
+      synchronize: true   
     }),
     ClientModule,
     BookModule,

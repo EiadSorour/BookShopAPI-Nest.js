@@ -17,6 +17,6 @@ export class Client extends Model{
     @Column({defaultValue: 0})
     total_books_bought: number
 
-    @BelongsToMany(()=>Book , ()=>Order)
+    @BelongsToMany(()=>Book , { through: {model: ()=>Order,  unique: false } })
     books: Book[]
 }

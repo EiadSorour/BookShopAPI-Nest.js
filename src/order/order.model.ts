@@ -4,6 +4,10 @@ import { Client } from "src/client/client.model";
 
 @Table
 export class Order extends Model{
+
+    @Column({primaryKey:true , autoIncrement: true})
+    orderID: number;
+
     @Column({allowNull: false})
     quantity: number;
 
@@ -11,8 +15,8 @@ export class Order extends Model{
     @Column
     bookID: number;
 
-    @ForeignKey(()=>Client)
+    @ForeignKey(()=>Client) 
     @Column
     clientID: number;
-}
+} 
 

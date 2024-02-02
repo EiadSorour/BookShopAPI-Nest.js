@@ -1,7 +1,7 @@
-import { Body, Controller, HttpCode, HttpStatus, Param, Post, Res } from "@nestjs/common";
+import { Body, Controller, HttpCode, Param, Post } from "@nestjs/common";
 import { OrderDto } from "./dto/orderDto";
 import { OrderService } from "./order.service";
-import { Response } from "express";
+import { HttpStatusMessage } from "../utils/HttpStatusMessage";
 
 @Controller("/api/buy")
 export class OrderController{
@@ -13,9 +13,9 @@ export class OrderController{
     
     @Post("/:quantity")
     @HttpCode(200)
-    async buyBook(@Param("quantity") quantity:number , @Body() orderDto: OrderDto , @Res() res:Response){
+    async buyBook(@Param("quantity") quantity:number , @Body() orderDto: OrderDto){
         const message = await this.orderService.buyBook(Number(quantity), orderDto);
-        return res.json({status: HttpStatus.OK , data:{message}})
+        return {status: HttpStatusMessage.SUCCESS , data:{message}};
     }
 
 }
