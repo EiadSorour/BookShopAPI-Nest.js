@@ -1,16 +1,18 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch,UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UpdateUserDto } from "./dto/updateUserDto";
 import { User } from "./user.model";
 import { HttpStatusMessage } from "../utils/HttpStatusMessage";
 import { AppError } from "../utils/AppError";
+import { RolesGuard } from "src/guards/authorization.guard";
 
+@UseGuards(RolesGuard)
 @Controller("api/user")
 export class UserController{
 
     constructor(private readonly userService: UserService){}
 
-    @Get() 
+    @Get()
     @HttpCode(200)
     async getAllUsers(){
         const users:User[] = await this.userService.findAllUsers();
