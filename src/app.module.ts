@@ -4,6 +4,7 @@ import { UserModule } from './User/user.module';
 import { BookModule } from './book/book.module';
 import { OrderModule } from './order/order.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { ConfigModule } from '@nestjs/config';
     }),
     UserModule,
     BookModule,
-    OrderModule
+    OrderModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],

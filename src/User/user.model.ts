@@ -4,14 +4,14 @@ import { Order } from "src/order/order.model";
 
 @Table
 export class User extends Model{
-    
-    @Column({allowNull: false , unique:true})
+
+    @Column({allowNull: false , unique:true, primaryKey:true})
     username: string;
 
     @Column({allowNull: false})
     password: string;
 
-    @Column({allowNull: false})
+    @Column({allowNull: false})  
     money_owned: number;
 
     @Column({allowNull: false})

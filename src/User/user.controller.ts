@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { AddUserDto } from "./dto/addUserDto";
 import { UpdateUserDto } from "./dto/updateUserDto";
 import { User } from "./user.model";
 import { HttpStatusMessage } from "../utils/HttpStatusMessage";
@@ -18,37 +17,30 @@ export class UserController{
         return {status: HttpStatusMessage.SUCCESS , data:{users}};
     }
 
-    @Post()
-    @HttpCode(201)
-    async addUser(@Body() addUserDto:AddUserDto){
-        await this.userService.addUser(addUserDto);
-        return {status: HttpStatusMessage.SUCCESS , data:{message:"Created Successfully"}};
-    }
-
-    @Get("/:id")
+    @Get("/:username")
     @HttpCode(200)
-    async getUser( @Param("id") id:string){
-        const user:User = await this.userService.getUser(id);
+    async getUser( @Param("username") username:string){
+        const user:User = await this.userService.getUser(username);
         if(!user){
             return AppError("This user doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
         }
         return {status: HttpStatusMessage.SUCCESS , data:{user}};
     }
 
-    @Patch("/:id")
+    @Patch("/:username")
     @HttpCode(200)
-    async updateUser(@Param("id") id:string , @Body() updateUserDto:UpdateUserDto){
-        const updatedUser:User = await this.userService.updateUser(id , updateUserDto);
+    async updateUser(@Param("username") username:string , @Body() updateUserDto:UpdateUserDto){
+        const updatedUser:User = await this.userService.updateUser(username , updateUserDto);
         if(!updatedUser){
             return AppError("This user doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
         }
         return {status: HttpStatusMessage.SUCCESS , data:{updatedUser}};
     }
 
-    @Delete("/:id")
+    @Delete("/:username")
     @HttpCode(200)
-    async deleteUser(@Param("id") id:string){
-        const deletedUsers:number = await this.userService.deleteUser(id);
+    async deleteUser(@Param("username") username:string){
+        const deletedUsers:number = await this.userService.deleteUser(username);
         if(deletedUsers === 0){
             return AppError("This user doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
         }

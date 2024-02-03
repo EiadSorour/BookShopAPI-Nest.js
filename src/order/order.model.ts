@@ -17,6 +17,6 @@ export class Order extends Model{
 
     @ForeignKey(()=>User) 
     @Column
-    userID: number;
+    username: string;
 } 
 

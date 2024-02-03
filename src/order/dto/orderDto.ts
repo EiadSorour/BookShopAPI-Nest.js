@@ -1,13 +1,13 @@
-import { IsNumber, IsOptional } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class OrderDto{
     
     @IsOptional()
     @IsNumber()
-    quantity: number; 
+    quantity: number;
     
-    @IsNumber()
-    userID: number;
+    @IsString()
+    username: string;
     
     @IsNumber()
     bookID: number;

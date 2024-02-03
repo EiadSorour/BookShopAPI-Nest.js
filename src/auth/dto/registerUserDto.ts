@@ -1,6 +1,6 @@
 import { IsString, IsNumber } from "class-validator";
 
-export class AddUserDto{
+export class RegisterUserDto{
     @IsString()
     username: string;
 

@@ -20,7 +20,7 @@ export class OrderService{
     
     async buyBook(quantity:number , orderDto:OrderDto): Promise<string>{
 
-        const user:User = await this.userService.getUser(String(orderDto.userID));
+        const user:User = await this.userService.getUser(String(orderDto.username));
         const book:Book = await this.bookService.getBook(String(orderDto.bookID));
 
         if(!user){
@@ -40,17 +40,16 @@ export class OrderService{
 
             const order:OrderDto = new OrderDto();
             order.quantity = quantity;
-            order.userID = user.id;
+            order.username = user.username; 
             order.bookID = book.id;
 
             await this.orderModel.create(order as any);
             
-            await this.userService.updateUser(user.dataValues.id , user.dataValues);
+            await this.userService.updateUser(user.dataValues.username , user.dataValues);
             await this.bookService.updateBook(book.dataValues.id , book.dataValues);
 
             return `User '${user.username}' bought ${quantity} copies of book '${book.title}' `;
         }catch(error){
-            console.log("i am here");
             throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE); 
         }
     }
