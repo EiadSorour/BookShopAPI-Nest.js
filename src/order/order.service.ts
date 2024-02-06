@@ -17,8 +17,13 @@ export class OrderService{
         private readonly bookService:BookService,
         @InjectModel(Order) private orderModel: typeof Order
     ){}
+
+    async getAllOrdersOfClient(username:string): Promise<Order[]>{
+        const orders:Order[] = await this.orderModel.findAll({where: {username:username}});
+        return orders;
+    }
     
-    async buyBook(quantity:number , orderDto:OrderDto): Promise<string>{
+    async buyBook(orderDto:OrderDto): Promise<string>{
 
         const user:User = await this.userService.getUser(String(orderDto.username));
         const book:Book = await this.bookService.getBook(String(orderDto.bookID));
@@ -27,19 +32,19 @@ export class OrderService{
             AppError("This user doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
         }else if(!book){
             AppError("This book doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
-        }else if(quantity > book.quantity_in_stock){
+        }else if(orderDto.quantity > book.quantity_in_stock){
             AppError("Not enough copies of this book in stock" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
-        }else if((quantity*book.price) > user.money_owned){
+        }else if((orderDto.quantity*book.price) > user.money_owned){
             AppError("User doesn't have enough money" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
         }
         
         try{
-            user.money_owned -= book.price*quantity;
-            book.quantity_in_stock -= quantity;
-            user.total_books_bought = Number(user.total_books_bought) +quantity;
+            user.money_owned -= book.price*orderDto.quantity;
+            book.quantity_in_stock -= orderDto.quantity;
+            user.total_books_bought = Number(user.total_books_bought) + orderDto.quantity;
 
             const order:OrderDto = new OrderDto();
-            order.quantity = quantity;
+            order.quantity = orderDto.quantity;
             order.username = user.username; 
             order.bookID = book.id;
 
@@ -48,7 +53,7 @@ export class OrderService{
             await this.userService.updateUser(user.dataValues.username , user.dataValues);
             await this.bookService.updateBook(book.dataValues.id , book.dataValues);
 
-            return `User '${user.username}' bought ${quantity} copies of book '${book.title}' `;
+            return `User '${user.username}' bought ${orderDto.quantity} copies of book '${book.title}' `;
         }catch(error){
             throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE); 
         }

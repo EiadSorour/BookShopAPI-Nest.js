@@ -2,12 +2,12 @@ import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class OrderDto{
     
+    @IsString()
     @IsOptional()
+    username: string;
+    
     @IsNumber()
     quantity: number;
-    
-    @IsString()
-    username: string;
     
     @IsNumber()
     bookID: number;
