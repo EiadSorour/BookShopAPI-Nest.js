@@ -12,7 +12,6 @@ export class AuthService{
     constructor(private userService:UserService , private jwtService:JwtService){}
 
     async login(loginUserDto: LoginUserDto): Promise<string>{
-        console.log(loginUserDto.username);
         const user = await this.userService.getUser(loginUserDto.username);
         if(!user){
             AppError("This user doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
