@@ -1,4 +1,4 @@
-import { IsString, IsNumber } from "class-validator";
+import { IsString, IsNumber, IsEnum } from "class-validator";
 
 export class RegisterUserDto{
     @IsString()
@@ -11,5 +11,6 @@ export class RegisterUserDto{
     money_owned: number
 
     @IsString()
+    @IsEnum({client:"client" , admin:"admin"})
     role: string
 }
