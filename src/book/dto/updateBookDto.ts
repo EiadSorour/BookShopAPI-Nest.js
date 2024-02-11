@@ -8,9 +8,9 @@ export class UpdateBookDto{
     
     @IsNumber()
     @IsOptional()
-    price?: number;
+    price: number;
     
     @IsNumber()
     @IsOptional() 
-    quantity_in_stock?: number;
+    quantity_in_stock: number;
 }

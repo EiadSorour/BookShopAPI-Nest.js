@@ -28,9 +28,7 @@ export class OrderService{
         const user:User = await this.userService.getUser(String(orderDto.username));
         const book:Book = await this.bookService.getBook(String(orderDto.bookID));
 
-        if(!user){
-            AppError("This user doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
-        }else if(!book){
+        if(!book){
             AppError("This book doesn't exist" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
         }else if(orderDto.quantity > book.quantity_in_stock){
             AppError("Not enough copies of this book in stock" , HttpStatusMessage.FAIL , HttpStatus.BAD_REQUEST);
@@ -42,6 +40,9 @@ export class OrderService{
             user.money_owned -= book.price*orderDto.quantity;
             book.quantity_in_stock -= orderDto.quantity;
             user.total_books_bought = Number(user.total_books_bought) + orderDto.quantity;
+            if(book.quantity_in_stock < 1){
+                book.available = false;
+            }
 
             const order:OrderDto = new OrderDto();
             order.quantity = orderDto.quantity;

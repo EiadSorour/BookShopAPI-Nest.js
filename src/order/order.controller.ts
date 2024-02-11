@@ -3,7 +3,6 @@ import { OrderDto } from "./dto/orderDto";
 import { OrderService } from "./order.service";
 import { HttpStatusMessage } from "../utils/HttpStatusMessage";
 import { AuthGuard } from "src/guards/authentication.guard";
-import { Request } from "express";
 
 @Controller("/api/order")
 export class OrderController{

@@ -1,4 +1,5 @@
 import { Table , Column , Model, BelongsToMany } from "sequelize-typescript";
+import { Booking } from "src/Bookings/bookings.model";
 import { Book } from "src/book/book.model";
 import { Order } from "src/order/order.model";
 
@@ -21,5 +22,8 @@ export class User extends Model{
     total_books_bought: number
 
     @BelongsToMany(()=>Book , { through: {model: ()=>Order,  unique: false } })
-    books: Book[]
+    boughtBooks: Book[]
+
+    @BelongsToMany(()=>Book , { through: {model: ()=>Booking,  unique: false } })
+    bookedBooks: Book[]
 }

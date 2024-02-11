@@ -5,6 +5,7 @@ import { BookModule } from './book/book.module';
 import { OrderModule } from './order/order.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { BookingsModule } from './Bookings/bookings.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     BookModule,
     OrderModule,
+    BookingsModule,
     AuthModule
   ],
   controllers: [],

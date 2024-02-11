@@ -26,6 +26,11 @@ export class BookService{
 
     async addBook(addBookDto: AddBookDto): Promise<void>{
         try{
+            if(addBookDto.quantity_in_stock < 1){
+                addBookDto.available = false;
+            }else{
+                addBookDto.available = true;
+            }
             await this.bookModel.create(addBookDto as any);
         }catch(error){
             throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE);

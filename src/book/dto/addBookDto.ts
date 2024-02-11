@@ -1,4 +1,4 @@
-import { IsString, IsNumber} from "class-validator";
+import { IsString, IsNumber, IsBoolean, IsOptional} from "class-validator";
 
 export class AddBookDto{
     @IsString()
@@ -9,4 +9,8 @@ export class AddBookDto{
     
     @IsNumber()
     quantity_in_stock: number;
+
+    @IsBoolean()
+    @IsOptional()
+    available: boolean;
 }
