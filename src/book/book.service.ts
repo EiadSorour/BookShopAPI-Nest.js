@@ -42,7 +42,14 @@ export class BookService{
             if(Object.keys(updateBookDto).length === 0){
                 return await this.getBook(bookID);
             }
-            return (await this.bookModel.update(updateBookDto , {where:{id:bookID}, returning:true }))[1][0];
+
+            const updatedBook = {...updateBookDto , available:null};
+            if(updateBookDto.quantity_in_stock < 1){
+                updatedBook.available = false;
+            }else{
+                updatedBook.available = true;
+            }
+            return (await this.bookModel.update(updatedBook , {where:{id:bookID}, returning:true }))[1][0];
         }catch(error){
             throw new HttpException(error.message , HttpStatus.NOT_ACCEPTABLE);
         }

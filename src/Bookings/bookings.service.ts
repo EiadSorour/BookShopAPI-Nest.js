@@ -49,7 +49,6 @@ export class BookingService{
 
         try{
             const freeBooksThatTime = await this.bookingModel.findAndCountAll({where: {bookID: book.dataValues.id , toDate: {[sequelize.Op.lte]: addBookingDto.fromDate} }});
-            console.log(freeBooksThatTime.count);
             if(book.available === true || freeBooksThatTime.count > 1){
                 book.quantity_in_stock -= 1;
                 if(book.quantity_in_stock === 0){
